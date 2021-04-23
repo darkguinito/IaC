@@ -1,0 +1,4 @@
+storage_dest_path: "/media/music"
+storage_src_path: "/dev/sda1"
+storage_format: "ntfs"
+storage_opts: ""

@@ -1,0 +1,29 @@
+
+- name: add sshkey know_host
+  hosts: raw
+  gather_facts: true
+  vars:
+    ansible_user: '{{ raw_ansible_user }}'
+    ansible_ssh_pass: '{{ raw_ansible_ssh_pass }}'
+  pre_tasks:
+
+    - name: Set custom SSH port fact (or use default)
+      delegate_to: localhost
+      set_fact:
+        ansible_ssh_port: "{{ hostvars[inventory_hostname]['ansible_ssh_port'] | default('22') }}"
+
+    - name: Scan and save all SSH host keys
+      delegate_to: localhost
+      lineinfile:
+        dest: ~/.ssh/known_hosts
+        create: yes
+        state: present
+        line: "{{ lookup('pipe', 'ssh-keyscan -trsa -p' + ansible_ssh_port + ' ' + inventory_hostname) }}"
+
+  roles:
+    - role: mikolak-net.raspi_config
+      raspi_config_replace_user:
+        name: tipiak
+        path_to_ssh_key: "/root/.ssh/id_rsa_pi_k3s.pub"
+      raspi_config_fail_on_auth_test: false
+      become: yes

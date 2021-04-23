@@ -1,0 +1,9 @@
+---
+# Src: https://github.com/tielou/k8s-rpi-ansible
+# tasks file for nfs
+- name: Install nfs
+  apt:
+    name:
+      - nfs-common
+    state: present
+

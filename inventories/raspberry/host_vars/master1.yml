@@ -1,0 +1,6 @@
+ansible_host: 192.168.0.22
+raspi_config_hostname: master
+
+nfs_shares:
+  - share: /srv/nfs_hdd
+    mount: /srv/music

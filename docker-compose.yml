@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  ansible:
+    image: ansible
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./inventories/raspberry:/etc/ansible
+      - ../creds/ssh:/root/.ssh
+      - ./playbooks:/usr/src/playbooks
+      - ./roles:/usr/src/roles
+      - ./ansible.cfg:/usr/src/ansible.cfg
+    command: ansible-playbook playbooks/know_hosts.yml
+    environment:
+      - ANSIBLE_HOST_KEY_CHECKING=false
+  k3s:
+    extends:
+      service: ansible
+    command: ansible-playbook playbooks/site.yml
+    environment:
+      - ANSIBLE_HOST_KEY_CHECKING=true
+    volumes:
+      - ./inventories/raspberry:/etc/ansible
+      - ../creds/ssh:/root/.ssh
+      - ./playbooks:/usr/src/playbooks
+      - ./roles:/usr/src/roles
+      - ./ansible.cfg:/usr/src/ansible.cfg
+      - ../creds/kube:/root/.kube
+
+  shutdown:
+    extends:
+      service: k3s
+    command: ansible all -a "shutdown now" -b
+    environment:
+      - ANSIBLE_HOST_KEY_CHECKING=true
+    volumes:
+      - ./inventories/raspberry:/etc/ansible
+      - ../creds/ssh:/root/.ssh
+      - ./ansible.cfg:/usr/src/ansible.cfg

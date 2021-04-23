@@ -1,0 +1,12 @@
+---
+
+- name: Creates host credential directory
+  file:
+    path: "{{ k3s_information_host_dir }}/"
+    state: directory
+
+- name: Get K3s credential
+  fetch:
+    src: "~{{ ansible_user }}/.kube/config"
+    dest: "{{ k3s_information_host_dir }}/"
+    flat: yes
