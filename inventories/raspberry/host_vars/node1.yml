@@ -1,2 +1,2 @@
-ansible_host: 192.168.0.13
+ansible_host: 192.168.0.41
 raspi_config_hostname: node1

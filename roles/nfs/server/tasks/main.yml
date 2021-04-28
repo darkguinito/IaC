@@ -35,14 +35,14 @@
     enabled: yes
   when: nfs_config.changed
 
-- name: Mount NFS volumes
-  mount:
-    name: "{{ item.mount }}"
-    src: "{{ ansible_default_ipv4.address }}:{{ item.share }}"
-    fstype: nfs
-    opts: "noauto,x-systemd.automount,x-systemd.device-timeout=10,timeo=14"
-    state: mounted
-  with_items: "{{ nfs_shares }}"
+# - name: Mount NFS volumes
+#   mount:
+#     name: "{{ item.mount }}"
+#     src: "{{ ansible_default_ipv4.address }}:{{ item.share }}"
+#     fstype: nfs
+#     opts: "noauto,x-systemd.automount,x-systemd.device-timeout=10,timeo=14"
+#     state: mounted
+#   with_items: "{{ nfs_shares }}"
     #
     #- name: Deploy nfs client manifest
     #  k8s:
