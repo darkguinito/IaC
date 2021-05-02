@@ -10,7 +10,7 @@
 
 - name: Create NFS share dirs
   file:
-    path: "{{ item.share }}"
+    path: "{{ item }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: www-data
@@ -20,7 +20,7 @@
 - name: Write nfs export entries
   lineinfile:
     path: /etc/exports
-    line: "{{ item.share }} *(rw,sync,no_root_squash,no_subtree_check)"
+    line: "{{ item }} *(rw,sync,no_root_squash,no_subtree_check)"
     owner: root
     group: root
     mode: '0644'

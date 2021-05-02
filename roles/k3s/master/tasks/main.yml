@@ -4,83 +4,91 @@
     path: "{{ systemd_dir }}/k3s.service"
   register: stat_result
 
-- name: install K3s
-  block:
-  - name: Copy K3s service file
-    register: k3s_service
-    template:
-      src: "k3s.service.j2"
-      dest: "{{ systemd_dir }}/k3s.service"
-      owner: root
-      group: root
-      mode: 0755
+- name: Copy K3s service file
+  register: k3s_service
+  template:
+    src: "k3s.service.j2"
+    dest: "{{ systemd_dir }}/k3s.service"
+    owner: root
+    group: root
+    mode: 0755
 
-  - name: Enable and check K3s service
-    systemd:
-      name: k3s
-      daemon_reload: yes
-      state: restarted
-      enabled: yes
+- name: Set docker private registry
+  template:
+    src: "registries.yaml.j2"
+    dest: "/etc/rancher/k3s/registries.yaml"
+    owner: root
+    group: root
+    mode: 0755
 
-  - name: Wait for node-token
-    wait_for:
-      path: /var/lib/rancher/k3s/server/node-token
+- name: Enable and check K3s service
+  systemd:
+    name: k3s
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
 
-  - name: Register node-token file access mode
-    stat:
-      path: /var/lib/rancher/k3s/server
-    register: p
+    #- name: install K3s
+    #  block:
+- name: Wait for node-token
+  wait_for:
+    path: /var/lib/rancher/k3s/server/node-token
 
-  - name: Change file access node-token
-    file:
-      path: /var/lib/rancher/k3s/server
-      mode: "g+rx,o+rx"
+- name: Register node-token file access mode
+  stat:
+    path: /var/lib/rancher/k3s/server
+  register: p
 
-  - name: Read node-token from master
-    slurp:
-      src: /var/lib/rancher/k3s/server/node-token
-    register: node_token
+- name: Change file access node-token
+  file:
+    path: /var/lib/rancher/k3s/server
+    mode: "g+rx,o+rx"
 
-  - name: Store Master node-token
-    set_fact:
-      token: "{{ node_token.content | b64decode | regex_replace('\n', '') }}"
+- name: Read node-token from master
+  slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: node_token
 
-  - name: Restore node-token file access
-    file:
-      path: /var/lib/rancher/k3s/server
-      mode: "{{ p.stat.mode }}"
+- name: Store Master node-token
+  set_fact:
+    token: "{{ node_token.content | b64decode | regex_replace('\n', '') }}"
 
-  - name: Create directory .kube
-    file:
-      path: ~{{ ansible_user }}/.kube
-      state: directory
-      owner: "{{ ansible_user }}"
-      mode: "u=rwx,g=rx,o="
+- name: Restore node-token file access
+  file:
+    path: /var/lib/rancher/k3s/server
+    mode: "{{ p.stat.mode }}"
 
-  - name: Copy config file to user home directory
-    copy:
-      src: /etc/rancher/k3s/k3s.yaml
-      dest: ~{{ ansible_user }}/.kube/config
-      remote_src: yes
-      owner: "{{ ansible_user }}"
-      mode: "u=rw,g=,o="
+- name: Create directory .kube
+  file:
+    path: ~{{ ansible_user }}/.kube
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: "u=rwx,g=rx,o="
 
-  - name: Replace https://localhost:6443 by https://master-ip:6443
-    command: >-
-      k3s kubectl config set-cluster default
-        --server=https://{{ master_ip }}:6443
-        --kubeconfig ~{{ ansible_user }}/.kube/config
-    changed_when: true
+- name: Copy config file to user home directory
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: ~{{ ansible_user }}/.kube/config
+    remote_src: yes
+    owner: "{{ ansible_user }}"
+    mode: "u=rw,g=,o="
 
-  - name: Create kubectl symlink
-    file:
-      src: /usr/local/bin/k3s
-      dest: /usr/local/bin/kubectl
-      state: link
+- name: Replace https://localhost:6443 by https://master-ip:6443
+  command: >-
+    k3s kubectl config set-cluster default
+      --server=https://{{ master_ip }}:6443
+      --kubeconfig ~{{ ansible_user }}/.kube/config
+  changed_when: true
 
-  - name: Create crictl symlink
-    file:
-      src: /usr/local/bin/k3s
-      dest: /usr/local/bin/crictl
-      state: link
-  when: not stat_result.stat.exists
+- name: Create kubectl symlink
+  file:
+    src: /usr/local/bin/k3s
+    dest: /usr/local/bin/kubectl
+    state: link
+
+- name: Create crictl symlink
+  file:
+    src: /usr/local/bin/k3s
+    dest: /usr/local/bin/crictl
+    state: link
+    #  when: not stat_result.stat.exists

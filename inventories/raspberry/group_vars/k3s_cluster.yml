@@ -7,3 +7,7 @@ extra_server_args: ""
 extra_agent_args: ""
 ansible_ssh_private_key_file: "/root/.ssh/id_rsa_pi_k3s"
 k3s_information_host_dir: "/root/.kube"
+
+docker_private_registry:
+  name: "docker-registry.local"
+  url:  "http://docker-registry.local"
