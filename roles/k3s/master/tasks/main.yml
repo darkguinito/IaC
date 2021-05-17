@@ -13,14 +13,6 @@
     group: root
     mode: 0755
 
-- name: Set docker private registry
-  template:
-    src: "registries.yaml.j2"
-    dest: "/etc/rancher/k3s/registries.yaml"
-    owner: root
-    group: root
-    mode: 0755
-
 - name: Enable and check K3s service
   systemd:
     name: k3s
@@ -65,6 +57,11 @@
     owner: "{{ ansible_user }}"
     mode: "u=rwx,g=rx,o="
 
+- name: Reset k3s.yaml mode 644
+  file:
+    path: /etc/rancher/k3s/k3s.yaml
+    mode: "644"
+
 - name: Copy config file to user home directory
   copy:
     src: /etc/rancher/k3s/k3s.yaml
@@ -72,6 +69,14 @@
     remote_src: yes
     owner: "{{ ansible_user }}"
     mode: "u=rw,g=,o="
+
+- name: Set docker private registry
+  template:
+    src: "registries.yaml.j2"
+    dest: "/etc/rancher/k3s/registries.yaml"
+    owner: root
+    group: root
+    mode: 0755
 
 - name: Replace https://localhost:6443 by https://master-ip:6443
   command: >-

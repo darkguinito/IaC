@@ -17,4 +17,10 @@
 - name: Mount by shell
   ansible.builtin.shell:
     cmd: 'mount {{ storage_src_path }} {{ storage_dest_path }}'
+  register: mount_cmd
+  failed_when:
+    - mount_cmd.rc != 0
+    - mount_cmd.rc != 32
+  changed_when:
+    - mount_cmd.rc == 0
   become: yes
