@@ -1,0 +1,17 @@
+{
+  "threshold": 0,
+  "reporters": ["html", "markdown"],
+  "ignore": [
+    "**/node_modules/**",
+    "roles/oefenweb.locales",
+    "roles/mikolak-net.raspi_config/**",
+    "**/.git/**",
+    "**/.rbenv/**",
+    "**/.venv'/**",
+    "**/*cache*/**",
+    "**/.github/**",
+    "**/.idea/**",
+    "**/report/**",
+    "**/*.svg"
+  ]
+}

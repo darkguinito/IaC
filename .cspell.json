@@ -1,0 +1,15 @@
+{
+  "version": "0.1",
+  "language": "en",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "roles/oefenweb.locales",
+    "roles/mikolak-net.raspi_config/**",
+    "**/vscode-extension/**",
+    "**/.git/**",
+    ".vscode",
+    "package-lock.json",
+    "report"
+  ],
+  "words": []
+}
