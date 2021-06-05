@@ -2,10 +2,11 @@ ansible_host: 192.168.0.40
 raspi_config_hostname: master
 
 nfs_shares:
-- /srv/nfs_hdd/pihole-pvc
-- /srv/nfs_hdd/dnsmasq-pvc
-- /media/music/music/
-- /media/music/music/download
-- /srv/nfs_hdd/docker-registry
-- /srv/nfs_hdd/fast-db
-- /srv/nfs_hdd/fast
+  - /srv/nfs_hdd/pihole-pvc
+  - /srv/nfs_hdd/dnsmasq-pvc
+  - /media/music/music/
+  - /media/music/music/download
+  - /srv/nfs_hdd/docker-registry
+  - /srv/nfs_hdd/fast-db
+  - /srv/nfs_hdd/fast
+  - /srv/nfs_hdd/mopidy

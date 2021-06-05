@@ -10,4 +10,4 @@ k3s_information_host_dir: "/root/.kube"
 
 docker_private_registry:
   name: "docker-registry.home"
-  url:  "http://docker-registry.home"
+  url: "http://docker-registry.home"

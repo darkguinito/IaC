@@ -2,9 +2,9 @@
 # Before 2.3, option 'name' was used instead of 'path'
 - name: Create dest dir if not exists
   ansible.builtin.file:
-    path: '{{ storage_dest_path }}'
+    path: "{{ storage_dest_path }}"
     state: directory
-  
+
     #- name: Mount Music Disk read-write
     #  ansible.posix.mount:
     #    path: '{{ storage_dest_path }}'
@@ -16,7 +16,7 @@
 
 - name: Mount by shell
   ansible.builtin.shell:
-    cmd: 'mount {{ storage_src_path }} {{ storage_dest_path }}'
+    cmd: "mount {{ storage_src_path }} {{ storage_dest_path }}"
   register: mount_cmd
   failed_when:
     - mount_cmd.rc != 0

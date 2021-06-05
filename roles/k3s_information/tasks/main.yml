@@ -1,5 +1,4 @@
 ---
-
 - name: Creates host credential directory
   file:
     path: "{{ k3s_information_host_dir }}/"

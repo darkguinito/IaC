@@ -1,12 +1,10 @@
-
 - name: add sshkey know_host
   hosts: raw
   gather_facts: true
   vars:
-    ansible_user: '{{ raw_ansible_user }}'
-    ansible_ssh_pass: '{{ raw_ansible_ssh_pass }}'
+    ansible_user: "{{ raw_ansible_user }}"
+    ansible_ssh_pass: "{{ raw_ansible_ssh_pass }}"
   pre_tasks:
-
     - name: Set custom SSH port fact (or use default)
       delegate_to: localhost
       set_fact:

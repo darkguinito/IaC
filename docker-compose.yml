@@ -31,8 +31,19 @@ services:
 
   shutdown:
     extends:
-      service: k3s
+      service: ansible
     command: ansible all -a "shutdown now" -b
+    environment:
+      - ANSIBLE_HOST_KEY_CHECKING=true
+    volumes:
+      - ./inventories/raspberry:/etc/ansible
+      - ../creds/ssh:/root/.ssh
+      - ./ansible.cfg:/usr/src/ansible.cfg
+
+  reboot:
+    extends:
+      service: ansible
+    command: ansible all -a "reboot" -b
     environment:
       - ANSIBLE_HOST_KEY_CHECKING=true
     volumes:
