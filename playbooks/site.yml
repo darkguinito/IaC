@@ -11,6 +11,8 @@
   become: yes
   roles:
     - role: nfs/server
+      tags:
+        - nfs
     - role: k3s/master
     - role: k3s_information
 
@@ -18,9 +20,13 @@
   become: yes
   roles:
     - role: nfs/client
+      tags:
+        - nfs
     - role: k3s/node
 
 - hosts: storage
   become: yes
   roles:
     - role: storages
+      tags:
+        - nfs

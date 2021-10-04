@@ -10,3 +10,4 @@ nfs_shares:
   - /srv/nfs_hdd/fast-db
   - /srv/nfs_hdd/fast
   - /srv/nfs_hdd/mopidy
+  - /srv/nfs_hdd/nfs
