@@ -5,18 +5,17 @@
     path: "{{ storage_dest_path }}"
     state: directory
 
-    #- name: Mount Music Disk read-write
-    #  ansible.posix.mount:
-    #    path: '{{ storage_dest_path }}'
-    #    src: '{{ storage_src_path }}'
-    #    fstype: '{{ storage_format }}'
-    #    opts: '{{ storage_opts }}'
-    #    state: mounted
-    #    become: yes
+- name: Mount Music Disk read-write
+  ansible.posix.mount:
+    path: '{{ storage_dest_path }}'
+    src: '{{ storage_src_path }}'
+    fstype: '{{ storage_format }}'
+    opts: '{{ storage_opts }}'
+    state: present
 
 - name: Mount by shell
   ansible.builtin.shell:
-    cmd: "mount {{ storage_src_path }} {{ storage_dest_path }}"
+    cmd: "mount -a"
   register: mount_cmd
   failed_when:
     - mount_cmd.rc != 0
